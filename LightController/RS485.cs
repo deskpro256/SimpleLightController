@@ -64,7 +64,7 @@ namespace LightController
             GreenLabel.Text = Convert.ToInt32(ReceivedMessage[3]).ToString();
             BlueLabel.Text = Convert.ToInt32(ReceivedMessage[4]).ToString();
             //rgb = red + green + blue;
-
+            //do something with thte data
         }
 
         public byte GetCRC(byte myid, byte receiverid, byte red, byte green, byte blue)
