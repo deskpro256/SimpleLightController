@@ -29,8 +29,10 @@ namespace LightController
                                                          { 0, 0, 0 } };
 
         //-----------[RS485 Stuff]-----------------
-        public byte[] message = new byte[7];
-        public byte[] RS485ReadBytes = new byte[7];
+        public static int BufferSize = 7;
+        public byte[] message = new byte[BufferSize];
+        public byte[] RS485ReadBytes = new byte[BufferSize - 1];
+        public byte[] ReceivedMessage = new byte[BufferSize - 1];
         public byte myID = 0x1C;    //PC soft ID
         public byte STX = 0x7C;
         public byte LookForSTX = 0x00;
@@ -46,6 +48,7 @@ namespace LightController
             Device0Button.Enabled = false;
             SendButton.Enabled = false;
             Device1Button.Enabled = true;
+            SerialProgressBar.Value = 0;
 
         }
 
@@ -83,6 +86,8 @@ namespace LightController
             {
                 Connected = false;
                 ConnectButton.Text = "Connect";
+                SerialProgressBar.Value = 0;
+                SendButton.Enabled = false;
                 try
                 {
                     SimpleIOClass.ClearPin(3);
@@ -103,6 +108,7 @@ namespace LightController
                         Connected = true;
                         ConnectButton.Text = "Disonnect";
                         SendButton.Enabled = true;
+                        SerialProgressBar.Value = 1;
                     }
                 }
                 catch (Exception)
@@ -119,7 +125,7 @@ namespace LightController
             SimpleIOClass.ConfigureIoDefaultOutput(0x00, 0x00);
             SimpleIOClass.SelectDevice(0);
         }
-
+        /*
         //----------------------[Color Selection]-------------------------------
         private void RedBar_Scroll(object sender, EventArgs e)
         {
@@ -138,7 +144,7 @@ namespace LightController
             BlueValueLabel.Text = BlueBar.Value.ToString();
             DeviceSettings[selectedDevice, 2] = Convert.ToByte(BlueBar.Value);
         }
-
+        */
         private void SendButton_Click(object sender, EventArgs e)
         {
             if (serialPort.IsOpen)
@@ -172,12 +178,12 @@ namespace LightController
             selectedDevice = 0;
             Device0Button.Enabled = false;
             Device1Button.Enabled = true;
-            RedBar.Value = Convert.ToInt32(DeviceSettings[selectedDevice, 0]);
-            GreenBar.Value = Convert.ToInt32(DeviceSettings[selectedDevice, 1]);
-            BlueBar.Value = Convert.ToInt32(DeviceSettings[selectedDevice, 2]);
-            RedValueLabel.Text = RedBar.Value.ToString();
-            GreenValueLabel.Text = GreenBar.Value.ToString();
-            BlueValueLabel.Text = BlueBar.Value.ToString();
+            //RedBar.Value = Convert.ToInt32(DeviceSettings[selectedDevice, 0]);
+            //GreenBar.Value = Convert.ToInt32(DeviceSettings[selectedDevice, 1]);
+            //BlueBar.Value = Convert.ToInt32(DeviceSettings[selectedDevice, 2]);
+            //RedValueLabel.Text = RedBar.Value.ToString();
+            //GreenValueLabel.Text = GreenBar.Value.ToString();
+            //BlueValueLabel.Text = BlueBar.Value.ToString();
         }
 
         private void Device1Button_Click(object sender, EventArgs e)
@@ -185,14 +191,14 @@ namespace LightController
             selectedDevice = 1;
             Device1Button.Enabled = false;
             Device0Button.Enabled = true;
-            RedBar.Value = Convert.ToInt32(DeviceSettings[selectedDevice, 0]);
-            GreenBar.Value = Convert.ToInt32(DeviceSettings[selectedDevice, 1]);
-            BlueBar.Value = Convert.ToInt32(DeviceSettings[selectedDevice, 2]);
-            RedValueLabel.Text = RedBar.Value.ToString();
-            GreenValueLabel.Text = GreenBar.Value.ToString();
-            BlueValueLabel.Text = BlueBar.Value.ToString();
+            //RedBar.Value = Convert.ToInt32(DeviceSettings[selectedDevice, 0]);
+            //GreenBar.Value = Convert.ToInt32(DeviceSettings[selectedDevice, 1]);
+            //BlueBar.Value = Convert.ToInt32(DeviceSettings[selectedDevice, 2]);
+            //RedValueLabel.Text = RedBar.Value.ToString();
+            //GreenValueLabel.Text = GreenBar.Value.ToString();
+            //BlueValueLabel.Text = BlueBar.Value.ToString();
         }
-        
+
 
         private void SerialSendTimer_Tick(object sender, EventArgs e)
         {
@@ -209,59 +215,20 @@ namespace LightController
         private void UpdateTimer_Tick(object sender, EventArgs e)
         {
             if (serialPort.IsOpen)
-            { 
+            {
                 AutoUpdateCheckBox.Enabled = true;
+                LookForSTX = Convert.ToByte(serialPort.ReadByte());
+                if (LookForSTX == STX)
+                {
+                    RS485Receive();
+                }
             }
             else
             {
                 AutoUpdateCheckBox.Enabled = false;
             }
 
-           
-        }
 
-        //---------------[RS485Send]-----------------------
-
-        public void RS485Send(byte receiverID, byte red, byte green, byte blue)
-        {
-            byte CRC = GetCRC(receiverID, red, green, blue);
-
-            message[0] = STX;
-            message[1] = receiverID;
-            message[2] = myID;
-            message[3] = red;
-            message[4] = green;
-            message[5] = blue;
-            message[6] = CRC;
-
-            SimpleIOClass.SetPin(2); //enable sending
-            System.Threading.Thread.Sleep(50);
-            serialPort.Write(message, 0, 7);
-            System.Threading.Thread.Sleep(20);
-            SimpleIOClass.ClearPin(2); //disable sending
-
-        }
-        public void RS485Receive()
-        {
-            if (LookForSTX == STX)
-            {
-                LookForSTX = 0x00;
-                serialPort.Read(RS485ReadBytes, 0, 7);
-                replied = true;
-            }
-            else
-            {
-                replied = false;
-            }
-        }
-
-        public byte GetCRC(byte receiverID, byte red, byte green, byte blue)
-        {
-            // big brain math here
-            byte CRC = Convert.ToByte(((STX + receiverID + myID + red + green + blue) ^ 0xff) & 0xff);
-
-
-            return CRC;
         }
 
         private void LightController_FormClosing(object sender, FormClosingEventArgs e)

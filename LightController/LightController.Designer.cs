@@ -46,10 +46,7 @@
             this.BlueLabel = new System.Windows.Forms.Label();
             this.GreenLabel = new System.Windows.Forms.Label();
             this.RedLabel = new System.Windows.Forms.Label();
-            this.RedBar = new System.Windows.Forms.TrackBar();
-            this.BlueBar = new System.Windows.Forms.TrackBar();
             this.SendButton = new System.Windows.Forms.Button();
-            this.GreenBar = new System.Windows.Forms.TrackBar();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.SerialGroupBox = new System.Windows.Forms.GroupBox();
             this.RefreshButton = new System.Windows.Forms.Button();
@@ -58,10 +55,12 @@
             this.PortnameLabel = new System.Windows.Forms.Label();
             this.ConnectButton = new System.Windows.Forms.Button();
             this.tabControl = new System.Windows.Forms.TabControl();
+            this.SerialProgressBar = new System.Windows.Forms.ProgressBar();
+            this.RedProgressBar = new System.Windows.Forms.ProgressBar();
+            this.GreenProgressBar = new System.Windows.Forms.ProgressBar();
+            this.BlueProgressBar = new System.Windows.Forms.ProgressBar();
+            this.RGBProgressBar = new System.Windows.Forms.ProgressBar();
             this.tabPage2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.RedBar)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.BlueBar)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.GreenBar)).BeginInit();
             this.tabPage1.SuspendLayout();
             this.SerialGroupBox.SuspendLayout();
             this.tabControl.SuspendLayout();
@@ -84,6 +83,10 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.RGBProgressBar);
+            this.tabPage2.Controls.Add(this.BlueProgressBar);
+            this.tabPage2.Controls.Add(this.GreenProgressBar);
+            this.tabPage2.Controls.Add(this.RedProgressBar);
             this.tabPage2.Controls.Add(this.label1);
             this.tabPage2.Controls.Add(this.Device1Button);
             this.tabPage2.Controls.Add(this.Device0Button);
@@ -96,10 +99,7 @@
             this.tabPage2.Controls.Add(this.BlueLabel);
             this.tabPage2.Controls.Add(this.GreenLabel);
             this.tabPage2.Controls.Add(this.RedLabel);
-            this.tabPage2.Controls.Add(this.RedBar);
-            this.tabPage2.Controls.Add(this.BlueBar);
             this.tabPage2.Controls.Add(this.SendButton);
-            this.tabPage2.Controls.Add(this.GreenBar);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
@@ -141,7 +141,7 @@
             // BlueValueLabel
             // 
             this.BlueValueLabel.AutoSize = true;
-            this.BlueValueLabel.Location = new System.Drawing.Point(174, 168);
+            this.BlueValueLabel.Location = new System.Drawing.Point(95, 156);
             this.BlueValueLabel.Name = "BlueValueLabel";
             this.BlueValueLabel.Size = new System.Drawing.Size(13, 13);
             this.BlueValueLabel.TabIndex = 18;
@@ -150,7 +150,7 @@
             // GreenValueLabel
             // 
             this.GreenValueLabel.AutoSize = true;
-            this.GreenValueLabel.Location = new System.Drawing.Point(174, 117);
+            this.GreenValueLabel.Location = new System.Drawing.Point(95, 104);
             this.GreenValueLabel.Name = "GreenValueLabel";
             this.GreenValueLabel.Size = new System.Drawing.Size(13, 13);
             this.GreenValueLabel.TabIndex = 17;
@@ -159,7 +159,7 @@
             // RedValueLabel
             // 
             this.RedValueLabel.AutoSize = true;
-            this.RedValueLabel.Location = new System.Drawing.Point(174, 66);
+            this.RedValueLabel.Location = new System.Drawing.Point(95, 52);
             this.RedValueLabel.Name = "RedValueLabel";
             this.RedValueLabel.Size = new System.Drawing.Size(13, 13);
             this.RedValueLabel.TabIndex = 16;
@@ -224,24 +224,6 @@
             this.RedLabel.TabIndex = 6;
             this.RedLabel.Text = "Red";
             // 
-            // RedBar
-            // 
-            this.RedBar.Location = new System.Drawing.Point(99, 34);
-            this.RedBar.Maximum = 255;
-            this.RedBar.Name = "RedBar";
-            this.RedBar.Size = new System.Drawing.Size(179, 45);
-            this.RedBar.TabIndex = 3;
-            this.RedBar.Scroll += new System.EventHandler(this.RedBar_Scroll);
-            // 
-            // BlueBar
-            // 
-            this.BlueBar.Location = new System.Drawing.Point(99, 136);
-            this.BlueBar.Maximum = 255;
-            this.BlueBar.Name = "BlueBar";
-            this.BlueBar.Size = new System.Drawing.Size(179, 45);
-            this.BlueBar.TabIndex = 5;
-            this.BlueBar.Scroll += new System.EventHandler(this.BlueBar_Scroll);
-            // 
             // SendButton
             // 
             this.SendButton.Location = new System.Drawing.Point(29, 181);
@@ -251,15 +233,6 @@
             this.SendButton.Text = "Send!";
             this.SendButton.UseVisualStyleBackColor = true;
             this.SendButton.Click += new System.EventHandler(this.SendButton_Click);
-            // 
-            // GreenBar
-            // 
-            this.GreenBar.Location = new System.Drawing.Point(99, 85);
-            this.GreenBar.Maximum = 255;
-            this.GreenBar.Name = "GreenBar";
-            this.GreenBar.Size = new System.Drawing.Size(179, 45);
-            this.GreenBar.TabIndex = 4;
-            this.GreenBar.Scroll += new System.EventHandler(this.GreenBar_Scroll);
             // 
             // tabPage1
             // 
@@ -274,6 +247,7 @@
             // 
             // SerialGroupBox
             // 
+            this.SerialGroupBox.Controls.Add(this.SerialProgressBar);
             this.SerialGroupBox.Controls.Add(this.RefreshButton);
             this.SerialGroupBox.Controls.Add(this.SelectButton);
             this.SerialGroupBox.Controls.Add(this.PortBox);
@@ -345,6 +319,51 @@
             this.tabControl.Size = new System.Drawing.Size(294, 255);
             this.tabControl.TabIndex = 7;
             // 
+            // SerialProgressBar
+            // 
+            this.SerialProgressBar.Location = new System.Drawing.Point(102, 191);
+            this.SerialProgressBar.Maximum = 1;
+            this.SerialProgressBar.Name = "SerialProgressBar";
+            this.SerialProgressBar.Size = new System.Drawing.Size(100, 10);
+            this.SerialProgressBar.Step = 1;
+            this.SerialProgressBar.TabIndex = 6;
+            // 
+            // RedProgressBar
+            // 
+            this.RedProgressBar.Location = new System.Drawing.Point(122, 45);
+            this.RedProgressBar.Maximum = 1;
+            this.RedProgressBar.Name = "RedProgressBar";
+            this.RedProgressBar.Size = new System.Drawing.Size(51, 23);
+            this.RedProgressBar.Step = 1;
+            this.RedProgressBar.TabIndex = 22;
+            // 
+            // GreenProgressBar
+            // 
+            this.GreenProgressBar.Location = new System.Drawing.Point(122, 97);
+            this.GreenProgressBar.Maximum = 1;
+            this.GreenProgressBar.Name = "GreenProgressBar";
+            this.GreenProgressBar.Size = new System.Drawing.Size(51, 23);
+            this.GreenProgressBar.Step = 1;
+            this.GreenProgressBar.TabIndex = 23;
+            // 
+            // BlueProgressBar
+            // 
+            this.BlueProgressBar.Location = new System.Drawing.Point(122, 149);
+            this.BlueProgressBar.Maximum = 1;
+            this.BlueProgressBar.Name = "BlueProgressBar";
+            this.BlueProgressBar.Size = new System.Drawing.Size(51, 23);
+            this.BlueProgressBar.Step = 1;
+            this.BlueProgressBar.TabIndex = 24;
+            // 
+            // RGBProgressBar
+            // 
+            this.RGBProgressBar.Location = new System.Drawing.Point(195, 45);
+            this.RGBProgressBar.Maximum = 1;
+            this.RGBProgressBar.Name = "RGBProgressBar";
+            this.RGBProgressBar.Size = new System.Drawing.Size(59, 127);
+            this.RGBProgressBar.Step = 1;
+            this.RGBProgressBar.TabIndex = 25;
+            // 
             // LightController
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -359,9 +378,6 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.LightController_FormClosing);
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.RedBar)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.BlueBar)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.GreenBar)).EndInit();
             this.tabPage1.ResumeLayout(false);
             this.SerialGroupBox.ResumeLayout(false);
             this.SerialGroupBox.PerformLayout();
@@ -388,10 +404,7 @@
         private System.Windows.Forms.Label BlueLabel;
         private System.Windows.Forms.Label GreenLabel;
         private System.Windows.Forms.Label RedLabel;
-        private System.Windows.Forms.TrackBar RedBar;
-        private System.Windows.Forms.TrackBar BlueBar;
         private System.Windows.Forms.Button SendButton;
-        private System.Windows.Forms.TrackBar GreenBar;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.GroupBox SerialGroupBox;
         private System.Windows.Forms.Button RefreshButton;
@@ -400,6 +413,11 @@
         private System.Windows.Forms.Label PortnameLabel;
         private System.Windows.Forms.Button ConnectButton;
         private System.Windows.Forms.TabControl tabControl;
+        private System.Windows.Forms.ProgressBar SerialProgressBar;
+        private System.Windows.Forms.ProgressBar BlueProgressBar;
+        private System.Windows.Forms.ProgressBar GreenProgressBar;
+        private System.Windows.Forms.ProgressBar RedProgressBar;
+        private System.Windows.Forms.ProgressBar RGBProgressBar;
     }
 }
 
